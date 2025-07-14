@@ -2,41 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* NottedTips Design System - Football Tips Platform */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Football Platform Color Palette */
+    --background: 225 25% 8%;           /* Dark Navy Background */
+    --foreground: 0 0% 100%;            /* White Text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 225 20% 12%;                /* Dark Card Background */
+    --card-foreground: 0 0% 100%;       /* White Card Text */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 225 20% 12%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 225 25% 8%;              /* Dark Navy Primary */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 22% 22%;           /* Dark Slate Blue */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 225 15% 15%;               /* Muted Dark */
+    --muted-foreground: 210 14% 70%;    /* Light Gray Text */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 42 96% 55%;               /* Amber Accent */
+    --accent-foreground: 225 25% 8%;    /* Dark text on amber */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --premium: 42 96% 55%;              /* Premium Amber */
+    --premium-foreground: 225 25% 8%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 142 76% 36%;             /* Win Green */
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --destructive: 0 84% 60%;           /* Loss Red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 225 15% 20%;
+    --input: 225 15% 15%;
+    --ring: 42 96% 55%;
+
+    --radius: 0.75rem;
+
+    /* Premium Gradients */
+    --gradient-premium: linear-gradient(135deg, hsl(42 96% 55%), hsl(42 86% 65%));
+    --gradient-dark: linear-gradient(135deg, hsl(225 25% 8%), hsl(225 20% 12%));
+    --gradient-card: linear-gradient(145deg, hsl(225 20% 12%), hsl(225 15% 15%));
+
+    /* Shadows */
+    --shadow-premium: 0 10px 30px -10px hsl(42 96% 55% / 0.3);
+    --shadow-card: 0 4px 20px -4px hsl(225 25% 8% / 0.4);
+    --shadow-glow: 0 0 40px hsl(42 96% 55% / 0.2);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +119,58 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-dark);
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* Premium Tip Cards */
+  .tip-card {
+    @apply bg-card rounded-lg p-6 shadow-lg border border-border;
+    background: var(--gradient-card);
+    transition: var(--transition-smooth);
+  }
+  
+  .tip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+  }
+  
+  .tip-card-premium {
+    @apply tip-card border-accent;
+    box-shadow: var(--shadow-premium);
+  }
+  
+  /* Premium Badge */
+  .premium-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    background: var(--gradient-premium);
+    color: hsl(var(--premium-foreground));
+  }
+  
+  /* Football Field Background Pattern */
+  .field-pattern {
+    background-image: 
+      linear-gradient(90deg, transparent 49%, hsl(var(--border)) 50%, hsl(var(--border)) 51%, transparent 52%),
+      linear-gradient(hsl(var(--background)), hsl(var(--background)));
+  }
+  
+  /* Glowing Effects */
+  .glow-premium {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Status Indicators */
+  .status-won {
+    @apply bg-success text-success-foreground;
+  }
+  
+  .status-lost {
+    @apply bg-destructive text-destructive-foreground;
+  }
+  
+  .status-pending {
+    @apply bg-muted text-muted-foreground;
   }
 }
