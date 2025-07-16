@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NottedTips - Professional Football Betting Tips</title>
-    <meta name="description" content="Get expert football betting tips and predictions from seasoned analysts. Join thousands of successful bettors who trust NottedTips." />
+    <title>Free Tips - NottedTips</title>
+    <meta name="description" content="Access free football betting tips and predictions from expert analysts at NottedTips." />
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,11 +30,11 @@
 
                 <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="index.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-accent-foreground bg-accent">
+                    <a href="index.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
                         <i data-lucide="home" class="w-4 h-4"></i>
                         <span>Home</span>
                     </a>
-                    <a href="tips-free.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                    <a href="tips-free.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-accent-foreground bg-accent">
                         <i data-lucide="trophy" class="w-4 h-4"></i>
                         <span>Free Tips</span>
                     </a>
@@ -82,7 +82,7 @@
                         <i data-lucide="home" class="w-4 h-4"></i>
                         <span>Home</span>
                     </a>
-                    <a href="tips-free.html" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-muted">
+                    <a href="tips-free.html" class="flex items-center space-x-2 px-3 py-2 rounded-md bg-accent text-accent-foreground">
                         <i data-lucide="trophy" class="w-4 h-4"></i>
                         <span>Free Tips</span>
                     </a>
@@ -112,141 +112,78 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative py-20 overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('src/assets/hero-stadium.jpg')">
-            <div class="absolute inset-0 bg-black/60"></div>
-        </div>
-        
-        <div class="relative container mx-auto px-4 text-center">
-            <div class="max-w-4xl mx-auto">
-                <h1 class="text-5xl md:text-6xl font-bold mb-6">
-                    Professional Football
-                    <span class="text-premium block">Betting Tips</span>
-                </h1>
-                <p class="text-xl text-muted-foreground mb-8 leading-relaxed">
-                    Get expert predictions from seasoned analysts. Join thousands of successful bettors 
-                    who trust NottedTips for their winning strategies.
+    <!-- Main Content -->
+    <main class="py-8">
+        <div class="container mx-auto px-4">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-4">Free Football Tips</h1>
+                <p class="text-muted-foreground max-w-2xl mx-auto">
+                    Access our expert free predictions for today's matches. Get started with professional analysis at no cost.
                 </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                    <a href="tips-free.html" class="btn-premium btn-lg">
-                        <i data-lucide="trophy" class="w-5 h-5 mr-2"></i>
-                        View Free Tips
-                    </a>
-                    <button id="upgrade-btn" class="btn-outline btn-lg border-premium text-premium hover:bg-premium hover:text-premium-foreground">
+            </div>
+
+            <!-- Filters -->
+            <div class="mb-8">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="Search tips..." 
+                            class="px-4 py-2 border border-border rounded-lg bg-input w-full sm:w-64"
+                        >
+                        <select id="league-filter" class="px-4 py-2 border border-border rounded-lg bg-input">
+                            <option value="">All Leagues</option>
+                        </select>
+                        <select id="status-filter" class="px-4 py-2 border border-border rounded-lg bg-input">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="won">Won</option>
+                            <option value="lost">Lost</option>
+                        </select>
+                    </div>
+                    <div class="text-sm text-muted-foreground">
+                        <span id="tips-count">Loading tips...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Grid -->
+            <div id="tips-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Loading state -->
+                <div class="col-span-full text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-premium"></div>
+                    <p class="mt-4 text-muted-foreground">Loading free tips...</p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-12">
+                <i data-lucide="search" class="w-16 h-16 mx-auto mb-4 text-muted-foreground"></i>
+                <h3 class="text-xl font-semibold mb-2">No tips found</h3>
+                <p class="text-muted-foreground mb-6">Try adjusting your search criteria or check back later for new tips.</p>
+                <button onclick="clearFilters()" class="btn-outline">
+                    Clear Filters
+                </button>
+            </div>
+
+            <!-- Upgrade CTA -->
+            <div class="mt-12 text-center bg-card/50 rounded-lg p-8">
+                <div class="max-w-2xl mx-auto">
+                    <i data-lucide="crown" class="w-12 h-12 mx-auto mb-4 text-premium"></i>
+                    <h3 class="text-2xl font-bold mb-4">Want More Winning Tips?</h3>
+                    <p class="text-muted-foreground mb-6">
+                        Upgrade to Premium for access to high-confidence tips with detailed analysis and better odds.
+                    </p>
+                    <button onclick="authManager.handleUpgrade()" class="btn-premium btn-lg glow-premium">
                         <i data-lucide="crown" class="w-5 h-5 mr-2"></i>
-                        <span id="upgrade-text">Upgrade to Premium</span>
+                        Upgrade to Premium
                     </button>
                 </div>
-
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="tip-card text-center">
-                        <i data-lucide="target" class="w-8 h-8 mx-auto mb-2 text-success"></i>
-                        <div class="text-2xl font-bold text-foreground">87%</div>
-                        <div class="text-sm text-muted-foreground">Win Rate</div>
-                    </div>
-                    <div class="tip-card text-center">
-                        <i data-lucide="trophy" class="w-8 h-8 mx-auto mb-2 text-premium"></i>
-                        <div class="text-2xl font-bold text-foreground">24</div>
-                        <div class="text-sm text-muted-foreground">Tips This Week</div>
-                    </div>
-                    <div class="tip-card text-center">
-                        <i data-lucide="users" class="w-8 h-8 mx-auto mb-2 text-accent"></i>
-                        <div class="text-2xl font-bold text-foreground">2.5K</div>
-                        <div class="text-sm text-muted-foreground">Active Users</div>
-                    </div>
-                    <div class="tip-card text-center">
-                        <i data-lucide="star" class="w-8 h-8 mx-auto mb-2 text-premium"></i>
-                        <div class="text-2xl font-bold text-foreground">12</div>
-                        <div class="text-sm text-muted-foreground">Premium Tips</div>
-                    </div>
-                </div>
             </div>
         </div>
-    </section>
-
-    <!-- Featured Tips Section -->
-    <section class="py-16">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4">Featured Tips</h2>
-                <p class="text-muted-foreground max-w-2xl mx-auto">
-                    Check out our top picks for today's matches. Premium tips offer higher odds and expert analysis.
-                </p>
-            </div>
-
-            <div id="featured-tips" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <!-- Tips will be loaded here -->
-            </div>
-
-            <div class="text-center">
-                <a href="tips-free.html" class="btn-outline btn-lg">
-                    View All Free Tips
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="py-16 bg-card/50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-4">Why Choose NottedTips?</h2>
-                <p class="text-muted-foreground max-w-2xl mx-auto">
-                    Professional analysis, real-time updates, and proven track record make us the best choice for football betting tips.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-premium/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="trending-up" class="w-8 h-8 text-premium"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">87% Win Rate</h3>
-                    <p class="text-muted-foreground">
-                        Our expert analysts maintain an industry-leading win rate across all leagues.
-                    </p>
-                </div>
-
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-premium/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="trophy" class="w-8 h-8 text-premium"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">All Major Leagues</h3>
-                    <p class="text-muted-foreground">
-                        Coverage of Premier League, La Liga, Serie A, Bundesliga, and more.
-                    </p>
-                </div>
-
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-premium/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="crown" class="w-8 h-8 text-premium"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Premium Analysis</h3>
-                    <p class="text-muted-foreground">
-                        In-depth statistical analysis and insider insights for premium members.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-16">
-        <div class="container mx-auto px-4 text-center">
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-3xl font-bold mb-4">Ready to Start Winning?</h2>
-                <p class="text-muted-foreground mb-8">
-                    Join thousands of successful bettors who trust our expert predictions.
-                </p>
-                <div id="cta-buttons" class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <!-- Buttons will be dynamically updated -->
-                </div>
-            </div>
-        </div>
-    </section>
+    </main>
 
     <!-- Auth Modal -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -296,6 +233,98 @@
     <script src="js/main.js"></script>
     
     <script>
+        // Free Tips Page Specific Code
+        let currentFilters = {
+            search: '',
+            league: '',
+            status: ''
+        };
+
+        function renderFreeTips() {
+            const freeTips = tipsManager.getFreeTips();
+            const filteredTips = applyFilters(freeTips);
+            
+            const container = document.getElementById('tips-container');
+            const emptyState = document.getElementById('empty-state');
+            const tipsCount = document.getElementById('tips-count');
+            
+            // Update count
+            tipsCount.textContent = `${filteredTips.length} free tip${filteredTips.length !== 1 ? 's' : ''} available`;
+            
+            if (filteredTips.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                container.innerHTML = filteredTips.map(tip => tipsManager.createTipCard(tip)).join('');
+                lucide.createIcons();
+            }
+        }
+
+        function applyFilters(tips) {
+            return tips.filter(tip => {
+                const matchesSearch = !currentFilters.search || 
+                    tip.title.toLowerCase().includes(currentFilters.search.toLowerCase()) ||
+                    tip.match.toLowerCase().includes(currentFilters.search.toLowerCase()) ||
+                    tip.prediction.toLowerCase().includes(currentFilters.search.toLowerCase());
+                
+                const matchesLeague = !currentFilters.league || tip.league === currentFilters.league;
+                const matchesStatus = !currentFilters.status || tip.status === currentFilters.status;
+                
+                return matchesSearch && matchesLeague && matchesStatus;
+            });
+        }
+
+        function setupFilters() {
+            const searchInput = document.getElementById('search-input');
+            const leagueFilter = document.getElementById('league-filter');
+            const statusFilter = document.getElementById('status-filter');
+            
+            // Populate league filter
+            const leagues = tipsManager.getLeagues();
+            leagues.forEach(league => {
+                const option = document.createElement('option');
+                option.value = league;
+                option.textContent = league;
+                leagueFilter.appendChild(option);
+            });
+            
+            // Event listeners
+            searchInput?.addEventListener('input', (e) => {
+                currentFilters.search = e.target.value;
+                renderFreeTips();
+            });
+            
+            leagueFilter?.addEventListener('change', (e) => {
+                currentFilters.league = e.target.value;
+                renderFreeTips();
+            });
+            
+            statusFilter?.addEventListener('change', (e) => {
+                currentFilters.status = e.target.value;
+                renderFreeTips();
+            });
+        }
+
+        function clearFilters() {
+            currentFilters = { search: '', league: '', status: '' };
+            document.getElementById('search-input').value = '';
+            document.getElementById('league-filter').value = '';
+            document.getElementById('status-filter').value = '';
+            renderFreeTips();
+        }
+
+        // Initialize page when tips are loaded
+        tipsManager.init().then(() => {
+            renderFreeTips();
+            setupFilters();
+        });
+
+        // Re-render when auth state changes
+        authManager.onAuthStateChange(() => {
+            renderFreeTips();
+        });
+        
         lucide.createIcons();
     </script>
 </body>

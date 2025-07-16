@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - NottedTips</title>
+    <meta name="description" content="Admin dashboard for managing tips and users at NottedTips." />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="min-h-screen bg-background">
+    <!-- Navigation -->
+    <nav id="navigation" class="bg-card border-b border-border shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-premium rounded-full flex items-center justify-center">
+                        <i data-lucide="trophy" class="w-5 h-5 text-premium-foreground"></i>
+                    </div>
+                    <span class="text-xl font-bold text-foreground">NottedTips</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                        <i data-lucide="home" class="w-4 h-4"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="tips-free.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                        <i data-lucide="trophy" class="w-4 h-4"></i>
+                        <span>Free Tips</span>
+                    </a>
+                    <a href="tips-premium.html" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                        <i data-lucide="crown" class="w-4 h-4"></i>
+                        <span>Premium Tips</span>
+                    </a>
+                    <a href="history.html" id="history-link" class="hidden flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
+                        <i data-lucide="trophy" class="w-4 h-4"></i>
+                        <span>History</span>
+                    </a>
+                    <a href="admin.html" id="admin-link" class="flex items-center space-x-1 px-3 py-2 rounded-md transition-colors text-accent-foreground bg-accent">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                        <span>Admin</span>
+                    </a>
+                </div>
+
+                <!-- User Actions -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <div id="user-info" class="hidden flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-muted-foreground">Hello,</span>
+                            <span id="user-name" class="text-sm font-medium"></span>
+                            <i id="premium-crown" data-lucide="crown" class="hidden w-4 h-4 text-premium"></i>
+                        </div>
+                        <button id="logout-btn" class="btn-ghost">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <button id="login-btn" class="btn-premium">
+                        Login
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="py-8">
+        <!-- Admin content will be rendered here -->
+    </main>
+
+    <!-- Add/Edit Tip Modal -->
+    <div id="tip-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-card rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="tip-modal-title" class="text-xl font-semibold">Add New Tip</h3>
+                <button id="close-tip-modal" class="text-muted-foreground hover:text-foreground">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="tip-form">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Title</label>
+                        <input type="text" id="tip-title" class="w-full px-3 py-2 border border-border rounded-md bg-input" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">League</label>
+                        <select id="tip-league" class="w-full px-3 py-2 border border-border rounded-md bg-input" required>
+                            <option value="">Select League</option>
+                            <option value="Premier League">Premier League</option>
+                            <option value="La Liga">La Liga</option>
+                            <option value="Serie A">Serie A</option>
+                            <option value="Bundesliga">Bundesliga</option>
+                            <option value="Ligue 1">Ligue 1</option>
+                            <option value="Champions League">Champions League</option>
+                            <option value="Europa League">Europa League</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-2">Match</label>
+                        <input type="text" id="tip-match" class="w-full px-3 py-2 border border-border rounded-md bg-input" placeholder="Team A vs Team B" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Prediction</label>
+                        <input type="text" id="tip-prediction" class="w-full px-3 py-2 border border-border rounded-md bg-input" placeholder="e.g., Over 2.5 Goals" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Odds</label>
+                        <input type="text" id="tip-odds" class="w-full px-3 py-2 border border-border rounded-md bg-input" placeholder="e.g., 1.85" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Confidence (%)</label>
+                        <input type="number" id="tip-confidence" class="w-full px-3 py-2 border border-border rounded-md bg-input" min="1" max="100" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Status</label>
+                        <select id="tip-status" class="w-full px-3 py-2 border border-border rounded-md bg-input" required>
+                            <option value="pending">Pending</option>
+                            <option value="won">Won</option>
+                            <option value="lost">Lost</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Date</label>
+                        <input type="text" id="tip-date" class="w-full px-3 py-2 border border-border rounded-md bg-input" placeholder="e.g., Today, Tomorrow" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Time</label>
+                        <input type="text" id="tip-time" class="w-full px-3 py-2 border border-border rounded-md bg-input" placeholder="e.g., 15:30" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="tip-premium" class="rounded border-border">
+                            <label for="tip-premium" class="text-sm font-medium">Premium Tip</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 mt-6">
+                    <button type="submit" class="flex-1 btn-premium">
+                        <span id="tip-submit-text">Add Tip</span>
+                    </button>
+                    <button type="button" onclick="closeTipModal()" class="flex-1 btn-outline">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-card rounded-lg p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="auth-title" class="text-lg font-semibold">Login</h3>
+                <button id="close-modal" class="text-muted-foreground hover:text-foreground">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <form id="auth-form">
+                <div class="space-y-4">
+                    <div id="name-field" class="hidden">
+                        <label class="block text-sm font-medium mb-1">Name</label>
+                        <input type="text" id="name" class="w-full px-3 py-2 border border-border rounded-md bg-input">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Email</label>
+                        <input type="email" id="email" class="w-full px-3 py-2 border border-border rounded-md bg-input" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Password</label>
+                        <input type="password" id="password" class="w-full px-3 py-2 border border-border rounded-md bg-input" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full mt-6 btn-premium">
+                    <span id="auth-submit-text">Login</span>
+                </button>
+                
+                <div class="text-center mt-4">
+                    <button type="button" id="toggle-auth" class="text-sm text-muted-foreground hover:text-foreground">
+                        <span id="toggle-text">Don't have an account? Sign up</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Config -->
+    <script src="js/firebase-config.js"></script>
+    
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/tips.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Admin Dashboard Specific Code
+        let currentEditingTip = null;
+
+        function initializeAdminDashboard() {
+            const user = authManager.getCurrentUser();
+            const mainContent = document.getElementById('main-content');
+            
+            if (!user || !user.isAdmin) {
+                renderAccessDenied();
+                return;
+            }
+            
+            renderAdminDashboard();
+        }
+
+        function renderAccessDenied() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="min-h-screen flex items-center justify-center">
+                    <div class="text-center">
+                        <i data-lucide="shield-x" class="w-16 h-16 mx-auto mb-4 text-destructive"></i>
+                        <h1 class="text-2xl font-bold mb-2">Access Denied</h1>
+                        <p class="text-muted-foreground mb-6">You don't have admin permissions to access this page.</p>
+                        <a href="index.html" class="btn-premium">
+                            <i data-lucide="home" class="w-4 h-4 mr-2"></i>
+                            Go Home
+                        </a>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function renderAdminDashboard() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="container mx-auto px-4">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h1 class="text-3xl font-bold mb-2">Admin Dashboard</h1>
+                            <p class="text-muted-foreground">Manage tips and users for NottedTips platform</p>
+                        </div>
+                        <button onclick="openAddTipModal()" class="btn-premium">
+                            <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                            Add New Tip
+                        </button>
+                    </div>
+
+                    <!-- Stats Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="tip-card text-center">
+                            <i data-lucide="trophy" class="w-8 h-8 mx-auto mb-2 text-premium"></i>
+                            <div class="text-2xl font-bold text-foreground" id="total-tips">-</div>
+                            <div class="text-sm text-muted-foreground">Total Tips</div>
+                        </div>
+                        <div class="tip-card text-center">
+                            <i data-lucide="crown" class="w-8 h-8 mx-auto mb-2 text-premium"></i>
+                            <div class="text-2xl font-bold text-foreground" id="premium-tips">-</div>
+                            <div class="text-sm text-muted-foreground">Premium Tips</div>
+                        </div>
+                        <div class="tip-card text-center">
+                            <i data-lucide="users" class="w-8 h-8 mx-auto mb-2 text-accent"></i>
+                            <div class="text-2xl font-bold text-foreground" id="total-users">-</div>
+                            <div class="text-sm text-muted-foreground">Total Users</div>
+                        </div>
+                        <div class="tip-card text-center">
+                            <i data-lucide="star" class="w-8 h-8 mx-auto mb-2 text-premium"></i>
+                            <div class="text-2xl font-bold text-foreground" id="premium-users">-</div>
+                            <div class="text-sm text-muted-foreground">Premium Users</div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="mb-6">
+                        <div class="flex space-x-1 border-b border-border">
+                            <button onclick="switchTab('tips')" id="tips-tab" class="px-4 py-2 font-medium border-b-2 border-premium text-premium">
+                                Tips Management
+                            </button>
+                            <button onclick="switchTab('users')" id="users-tab" class="px-4 py-2 font-medium border-b-2 border-transparent text-muted-foreground hover:text-foreground">
+                                Users Management
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tips Management Tab -->
+                    <div id="tips-content" class="tab-content">
+                        <div class="bg-card rounded-lg border border-border">
+                            <div class="p-4 border-b border-border">
+                                <h3 class="text-lg font-semibold">All Tips</h3>
+                            </div>
+                            <div class="p-4">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr class="border-b border-border">
+                                                <th class="text-left py-2">Title</th>
+                                                <th class="text-left py-2">League</th>
+                                                <th class="text-left py-2">Prediction</th>
+                                                <th class="text-left py-2">Odds</th>
+                                                <th class="text-left py-2">Status</th>
+                                                <th class="text-left py-2">Type</th>
+                                                <th class="text-left py-2">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tips-table-body">
+                                            <!-- Tips will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Management Tab -->
+                    <div id="users-content" class="tab-content hidden">
+                        <div class="bg-card rounded-lg border border-border">
+                            <div class="p-4 border-b border-border">
+                                <h3 class="text-lg font-semibold">All Users</h3>
+                            </div>
+                            <div class="p-4">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr class="border-b border-border">
+                                                <th class="text-left py-2">Name</th>
+                                                <th class="text-left py-2">Email</th>
+                                                <th class="text-left py-2">Status</th>
+                                                <th class="text-left py-2">Role</th>
+                                                <th class="text-left py-2">Joined</th>
+                                                <th class="text-left py-2">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="users-table-body">
+                                            <!-- Users will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            setupTipModal();
+            loadAdminData();
+            lucide.createIcons();
+        }
+
+        function switchTab(tab) {
+            // Update tab buttons
+            document.getElementById('tips-tab').className = tab === 'tips' 
+                ? 'px-4 py-2 font-medium border-b-2 border-premium text-premium'
+                : 'px-4 py-2 font-medium border-b-2 border-transparent text-muted-foreground hover:text-foreground';
+            
+            document.getElementById('users-tab').className = tab === 'users'
+                ? 'px-4 py-2 font-medium border-b-2 border-premium text-premium'
+                : 'px-4 py-2 font-medium border-b-2 border-transparent text-muted-foreground hover:text-foreground';
+            
+            // Show/hide content
+            document.getElementById('tips-content').classList.toggle('hidden', tab !== 'tips');
+            document.getElementById('users-content').classList.toggle('hidden', tab !== 'users');
+        }
+
+        async function loadAdminData() {
+            await loadTipsTable();
+            await loadUsersTable();
+            updateStats();
+        }
+
+        async function loadTipsTable() {
+            const tableBody = document.getElementById('tips-table-body');
+            if (!tableBody) return;
+            
+            const tips = tipsManager.tips;
+            
+            if (tips.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-8 text-muted-foreground">
+                            No tips found. <button onclick="openAddTipModal()" class="text-premium hover:underline">Add the first tip</button>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tableBody.innerHTML = tips.map(tip => `
+                <tr class="border-b border-border">
+                    <td class="py-3">
+                        <div class="font-medium">${tip.title}</div>
+                        <div class="text-sm text-muted-foreground">${tip.match}</div>
+                    </td>
+                    <td class="py-3">${tip.league}</td>
+                    <td class="py-3">${tip.prediction}</td>
+                    <td class="py-3 font-semibold">${tip.odds}</td>
+                    <td class="py-3">
+                        <span class="status-badge status-${tip.status}">${tip.status.charAt(0).toUpperCase() + tip.status.slice(1)}</span>
+                    </td>
+                    <td class="py-3">
+                        ${tip.isPremium 
+                            ? '<span class="premium-badge">Premium</span>' 
+                            : '<span class="text-muted-foreground">Free</span>'
+                        }
+                    </td>
+                    <td class="py-3">
+                        <div class="flex gap-2">
+                            <button onclick="editTip('${tip.id}')" class="text-accent hover:text-accent/80">
+                                <i data-lucide="edit" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteTip('${tip.id}')" class="text-destructive hover:text-destructive/80">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+
+        async function loadUsersTable() {
+            const tableBody = document.getElementById('users-table-body');
+            if (!tableBody) return;
+            
+            try {
+                const snapshot = await firebase.database.ref('users').once('value');
+                const usersData = snapshot.val();
+                const users = usersData ? Object.values(usersData) : [];
+                
+                if (users.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center py-8 text-muted-foreground">No users found.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tableBody.innerHTML = users.map(user => `
+                    <tr class="border-b border-border">
+                        <td class="py-3 font-medium">${user.name || user.email.split('@')[0]}</td>
+                        <td class="py-3">${user.email}</td>
+                        <td class="py-3">
+                            ${user.isPremium 
+                                ? '<span class="premium-badge">Premium</span>' 
+                                : '<span class="text-muted-foreground">Free</span>'
+                            }
+                        </td>
+                        <td class="py-3">
+                            ${user.isAdmin 
+                                ? '<span class="status-badge status-won">Admin</span>' 
+                                : '<span class="text-muted-foreground">User</span>'
+                            }
+                        </td>
+                        <td class="py-3 text-sm text-muted-foreground">
+                            ${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                        </td>
+                        <td class="py-3">
+                            <button onclick="toggleUserPremium('${user.id}', ${!user.isPremium})" 
+                                    class="text-accent hover:text-accent/80 text-sm">
+                                ${user.isPremium ? 'Remove Premium' : 'Make Premium'}
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-8 text-destructive">Error loading users</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateStats() {
+            const tips = tipsManager.tips;
+            const premiumTips = tips.filter(tip => tip.isPremium);
+            
+            const totalTipsEl = document.getElementById('total-tips');
+            const premiumTipsEl = document.getElementById('premium-tips');
+            
+            if (totalTipsEl) totalTipsEl.textContent = tips.length;
+            if (premiumTipsEl) premiumTipsEl.textContent = premiumTips.length;
+            
+            // Update user stats (simplified for demo)
+            const totalUsersEl = document.getElementById('total-users');
+            const premiumUsersEl = document.getElementById('premium-users');
+            
+            if (totalUsersEl) totalUsersEl.textContent = '2+';
+            if (premiumUsersEl) premiumUsersEl.textContent = '1+';
+        }
+
+        function setupTipModal() {
+            const modal = document.getElementById('tip-modal');
+            const closeBtn = document.getElementById('close-tip-modal');
+            const form = document.getElementById('tip-form');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeTipModal);
+            }
+            
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeTipModal();
+                });
+            }
+            
+            if (form) {
+                form.addEventListener('submit', handleTipSubmit);
+            }
+        }
+
+        function openAddTipModal() {
+            currentEditingTip = null;
+            document.getElementById('tip-modal-title').textContent = 'Add New Tip';
+            document.getElementById('tip-submit-text').textContent = 'Add Tip';
+            document.getElementById('tip-form').reset();
+            document.getElementById('tip-modal').classList.remove('hidden');
+        }
+
+        function editTip(tipId) {
+            const tip = tipsManager.tips.find(t => t.id === tipId);
+            if (!tip) return;
+            
+            currentEditingTip = tip;
+            document.getElementById('tip-modal-title').textContent = 'Edit Tip';
+            document.getElementById('tip-submit-text').textContent = 'Update Tip';
+            
+            // Populate form
+            document.getElementById('tip-title').value = tip.title;
+            document.getElementById('tip-league').value = tip.league;
+            document.getElementById('tip-match').value = tip.match;
+            document.getElementById('tip-prediction').value = tip.prediction;
+            document.getElementById('tip-odds').value = tip.odds;
+            document.getElementById('tip-confidence').value = tip.confidence;
+            document.getElementById('tip-status').value = tip.status;
+            document.getElementById('tip-date').value = tip.date;
+            document.getElementById('tip-time').value = tip.time;
+            document.getElementById('tip-premium').checked = tip.isPremium;
+            
+            document.getElementById('tip-modal').classList.remove('hidden');
+        }
+
+        function closeTipModal() {
+            document.getElementById('tip-modal').classList.add('hidden');
+            currentEditingTip = null;
+        }
+
+        async function handleTipSubmit(e) {
+            e.preventDefault();
+            
+            const tipData = {
+                title: document.getElementById('tip-title').value,
+                league: document.getElementById('tip-league').value,
+                match: document.getElementById('tip-match').value,
+                prediction: document.getElementById('tip-prediction').value,
+                odds: document.getElementById('tip-odds').value,
+                confidence: parseInt(document.getElementById('tip-confidence').value),
+                status: document.getElementById('tip-status').value,
+                date: document.getElementById('tip-date').value,
+                time: document.getElementById('tip-time').value,
+                isPremium: document.getElementById('tip-premium').checked,
+                createdAt: new Date().toISOString()
+            };
+            
+            try {
+                if (currentEditingTip) {
+                    await tipsManager.updateTip(currentEditingTip.id, tipData);
+                    authManager.showNotification('Tip updated successfully!', 'success');
+                } else {
+                    await tipsManager.addTip(tipData);
+                    authManager.showNotification('Tip added successfully!', 'success');
+                }
+                
+                closeTipModal();
+                await loadTipsTable();
+                updateStats();
+                
+            } catch (error) {
+                authManager.showNotification('Error saving tip. Please try again.', 'error');
+                console.error('Error saving tip:', error);
+            }
+        }
+
+        async function deleteTip(tipId) {
+            if (!confirm('Are you sure you want to delete this tip?')) return;
+            
+            try {
+                await tipsManager.deleteTip(tipId);
+                authManager.showNotification('Tip deleted successfully!', 'success');
+                await loadTipsTable();
+                updateStats();
+            } catch (error) {
+                authManager.showNotification('Error deleting tip. Please try again.', 'error');
+                console.error('Error deleting tip:', error);
+            }
+        }
+
+        async function toggleUserPremium(userId, isPremium) {
+            try {
+                await firebase.database.ref('users').child(userId).update({ isPremium });
+                authManager.showNotification(`User ${isPremium ? 'upgraded to' : 'removed from'} premium!`, 'success');
+                await loadUsersTable();
+                updateStats();
+            } catch (error) {
+                authManager.showNotification('Error updating user. Please try again.', 'error');
+                console.error('Error updating user:', error);
+            }
+        }
+
+        // Initialize admin dashboard when tips are loaded
+        tipsManager.init().then(() => {
+            initializeAdminDashboard();
+        });
+
+        // Re-render when auth state changes
+        authManager.onAuthStateChange(() => {
+            initializeAdminDashboard();
+        });
+        
+        lucide.createIcons();
+    </script>
+</body>
+</html>
